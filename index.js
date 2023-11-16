@@ -2,11 +2,15 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const authRouter = require('./routers/auth');
+const productRouter = require('./routers/product');
+const orderItemRouter = require('./routers/orderItem');
 
 
 //middleware
 app.use(express.json());
 app.use(authRouter);
+app.use(productRouter);
+app.use(orderItemRouter);
 
 //connect DB
 const DB =

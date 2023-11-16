@@ -11,13 +11,12 @@ const productSchema = mongoose.Schema({
     required: true,
     trim: true,
   },
-  image: {
-    type: String,
-    default: '',
-  },
+  // image: {
+  //   type: String,
+  //   default: '',
+  // },
   brand: {
     type: String,
-    required: true,
   },
   price: {
     type: Number,
@@ -28,4 +27,19 @@ const productSchema = mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  rating :{
+    type : Number
+  }, 
+  // Category :{
+  //   type : mongoose.Schema.Types.ObjectId,
+  //   ref : "Category"
+  // }, 
+  stock :{
+    type : Number , 
+    default:0
+  }
+
 });
+
+const Product = mongoose.model('Product', productSchema); 
+module.exports= Product;

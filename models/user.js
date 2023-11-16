@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
       message: "Please enter a valid email address",
     },
   },
+ 
   password: {
     required: true,
     type: String,
@@ -32,6 +33,24 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  date_of_birth: {
+    type : String,
+    default :''
+    
+  }, 
+  phone_number:{
+    type : Number, 
+  }, 
+  wishlist : 
+     {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref : 'Product',
+     }
+
+  , 
+  // image : {
+  //   type : String, 
+  // }
 });
 const User = mongoose.model("User", userSchema);
 module.exports = User;

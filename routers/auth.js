@@ -5,7 +5,7 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 
 authRouter.post("/api/v1/signup", async (req, res) => {
-  var { name, email, password, address, isAdmin } = req.body;
+  var { name, email, password, address, isAdmin , wishlist } = req.body;
   const existUser = await User.findOne({ email });
 
   try {
@@ -22,6 +22,7 @@ authRouter.post("/api/v1/signup", async (req, res) => {
       password: hashedPassword,
       address: address,
       isAdmin: isAdmin,
+      wishlist :wishlist 
     });
     user = await user.save();
 
