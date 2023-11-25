@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const authRouter = require('./routers/auth');
 const productRouter = require('./routers/product');
 const orderItemRouter = require('./routers/orderItem');
+const imageRouter = require("./routers/image_router");
 
 
 //middleware
@@ -11,10 +12,11 @@ app.use(express.json());
 app.use(authRouter);
 app.use(productRouter);
 app.use(orderItemRouter);
+app.use(imageRouter);
 
 //connect DB
 const DB =
-  "mongodb+srv://islamrabi3:123456789islam@cluster0.qvp8pzl.mongodb.net/";
+  "mongodb+srv://islamrabi3:123456789islam@cluster0.qvp8pzl.mongodb.net/ecommerce";
 mongoose
   .connect(DB)
   .then(() => {

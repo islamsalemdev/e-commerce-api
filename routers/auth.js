@@ -91,4 +91,20 @@ authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
   }
 });
 
+authRouter.get("/api/v1/getAllUsers", async (req, res) => {
+  try {
+    const allUsers = await User.find();
+    if (!allUsers) {
+      return res.status(400).json({ msg: "Something went wrong" });
+    }
+    //    if (password === user.password) {
+    //     return res.status(400).json({message:"this password is already exsit"});
+    //    }
+
+    res.json(allUsers);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = authRouter;
