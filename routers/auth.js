@@ -106,19 +106,34 @@ authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 authRouter.get("/api/v1/get-users", async (req, res) => {
   try {
     const user = await User.find();
     if (!user) {
+=======
+authRouter.get("/api/v1/getAllUsers", async (req, res) => {
+  try {
+    const allUsers = await User.find();
+    if (!allUsers) {
+>>>>>>> b6af6dce8d193dc9956b2b3edaca465fd9615e9e
       return res.status(400).json({ msg: "Something went wrong" });
     }
     //    if (password === user.password) {
     //     return res.status(400).json({message:"this password is already exsit"});
     //    }
 
+<<<<<<< HEAD
     res.json(user);
+=======
+    res.json(allUsers);
+>>>>>>> b6af6dce8d193dc9956b2b3edaca465fd9615e9e
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
+<<<<<<< HEAD
+=======
+
+>>>>>>> b6af6dce8d193dc9956b2b3edaca465fd9615e9e
 module.exports = authRouter;
