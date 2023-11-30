@@ -1,10 +1,9 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const authRouter = require('./routers/auth');
-const productRouter = require('./routers/product');
-const orderItemRouter = require('./routers/orderItem');
-
+const authRouter = require("./routers/auth");
+const productRouter = require("./routers/product");
+const orderItemRouter = require("./routers/orderItem");
 
 //middleware
 app.use(express.json());
@@ -14,7 +13,7 @@ app.use(orderItemRouter);
 
 //connect DB
 const DB =
-  "mongodb+srv://islamrabi3:123456789islam@cluster0.qvp8pzl.mongodb.net/";
+  "mongodb+srv://islamrabi3:123456789islam@cluster0.qvp8pzl.mongodb.net/albostan";
 mongoose
   .connect(DB)
   .then(() => {

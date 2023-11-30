@@ -4,8 +4,19 @@ const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 
-authRouter.post("/api/v1/signup", async (req, res) => {
-  var { name, email, password, address, isAdmin , wishlist } = req.body;
+authRouter.post("/api/v1/register", async (req, res) => {
+  var {
+    name,
+    email,
+    password,
+    address,
+    isAdmin,
+    city,
+    apartment,
+    street,
+    zip,
+    country,
+  } = req.body;
   const existUser = await User.findOne({ email });
 
   try {
@@ -22,7 +33,11 @@ authRouter.post("/api/v1/signup", async (req, res) => {
       password: hashedPassword,
       address: address,
       isAdmin: isAdmin,
-      wishlist :wishlist 
+      city: city,
+      apartment: apartment,
+      street: street,
+      zip: zip,
+      country: country,
     });
     user = await user.save();
 
@@ -33,7 +48,7 @@ authRouter.post("/api/v1/signup", async (req, res) => {
   }
 });
 
-authRouter.post("/api/v1/signin", async (req, res) => {
+authRouter.post("/api/v1/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -44,7 +59,7 @@ authRouter.post("/api/v1/signin", async (req, res) => {
         .json({ msg: "User with this email does not exist!" });
     }
 
-    const isMatch = await bcryptjs.compare(password, user.password);
+    const isMatch = bcryptjs.compareSync(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Incorrect password." });
     }
@@ -91,4 +106,19 @@ authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
   }
 });
 
+authRouter.get("/api/v1/get-users", async (req, res) => {
+  try {
+    const user = await User.find();
+    if (!user) {
+      return res.status(400).json({ msg: "Something went wrong" });
+    }
+    //    if (password === user.password) {
+    //     return res.status(400).json({message:"this password is already exsit"});
+    //    }
+
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
 module.exports = authRouter;
