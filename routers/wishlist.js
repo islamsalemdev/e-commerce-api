@@ -47,6 +47,27 @@ router.get("/api/v1/wishlist/get-products", async (req, res) => {
   }
 });
 
+// get wishlist for specific user
+router.get("/api/v1/wishlist/get-products/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userWishlist = await WishlistModel.find({ user: userId }).populate({
+      path: "product",
+    });
+    if (!userWishlist) {
+      res.status(401).json({ message: "No Product found" });
+    }
+    res.status(201).json(userWishlist);
+    // const wishProduct = await Wishlist.find().populate({
+    //   path: "product user",
+    // });
+    // // await wishProduct.save();
+    // return res.status(200).json(wishProduct);
+  } catch (error) {
+    return res.json({ message: error.message });
+  }
+});
+
 router.delete(
   "/api/v1/wishlist/delete-product/:userId/:productId",
   async (req, res) => {
@@ -88,7 +109,9 @@ router.delete(
 
       const deletedProduct = await WishlistModel.findOneAndDelete({
         user: userId,
-      }).populate({ path: "product" });
+      })
+        .populate({ path: "product" })
+        .exec();
       res.json({
         message: "Product Deleted Successfully",
         deleted_product: deletedProduct,

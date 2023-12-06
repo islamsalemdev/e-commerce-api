@@ -6,6 +6,7 @@ const productRouter = require("./routers/product");
 const orderItemRouter = require("./routers/orderItem");
 const categoryRouter = require("./routers/category");
 const wishlistRouter = require("./routers/wishlist");
+const newsRouter = require("./routers/news_router");
 //middleware
 app.use(express.json());
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(authRouter);
 app.use(productRouter);
 app.use(wishlistRouter);
+app.use(newsRouter);
 app.use(orderItemRouter);
 app.use(categoryRouter);
 
