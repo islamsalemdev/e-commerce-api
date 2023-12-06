@@ -47,29 +47,57 @@ router.get("/api/v1/wishlist/get-products", async (req, res) => {
   }
 });
 
-router.delete("/api/v1/wishlist/delete-product/:userId", async (req, res) => {
-  try {
-    const productId = req.params.productId;
-    const userId = req.params.userId;
+router.delete(
+  "/api/v1/wishlist/delete-product/:userId/:productId",
+  async (req, res) => {
+    try {
+      const productId = req.params.productId;
+      const userId = req.params.userId;
 
-    // Use findById to get a single product by ID
-    const product = await WishlistModel.findOne({
-      user: userId,
-    });
+      // Use findById to get a single product by ID
+      const product = await WishlistModel.findOne({
+        user: userId,
+        product: productId,
+      });
 
-    // if (!product) {
-    //   return res.status(404).json({ message: "Product not found" });
-    // }
+      // if (!product) {
+      //   return res.status(404).json({ message: "Product not found" });
+      // }
 
-    await WishlistModel.deleteMany({ user: userId });
-    res.json({
-      message: "Product Deleted Successfully",
-      deleted_product: product,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+      await WishlistModel.deleteOne(product);
+      res.json({
+        message: "Product Deleted Successfully",
+        deleted_product: product,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+);
+
+router.delete(
+  "/api/v1/wishlist/delete-all-product/:userId",
+  async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const existedProduct = await WishlistModel.findOne({ user: userId });
+      if (!existedProduct) {
+        res.status(402).json({ message: "Product not found" });
+      }
+
+      const deletedProduct = await WishlistModel.findOneAndDelete({
+        user: userId,
+      }).populate({ path: "product" });
+      res.json({
+        message: "Product Deleted Successfully",
+        deleted_product: deletedProduct,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+);
 
 module.exports = router;
