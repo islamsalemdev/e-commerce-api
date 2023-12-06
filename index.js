@@ -5,11 +5,14 @@ const authRouter = require("./routers/auth");
 const productRouter = require("./routers/product");
 const orderItemRouter = require("./routers/orderItem");
 const categoryRouter = require("./routers/category");
-
+const wishlistRouter = require("./routers/wishlist");
 //middleware
 app.use(express.json());
+
+// Routers
 app.use(authRouter);
 app.use(productRouter);
+app.use(wishlistRouter);
 app.use(orderItemRouter);
 app.use(categoryRouter);
 

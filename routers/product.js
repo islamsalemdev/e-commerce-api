@@ -98,4 +98,13 @@ productRouter.delete("/api/v1/delete-product/:id", async (req, res) => {
   }
 });
 
+productRouter.get("/api/v1/product/get-all", async (req, res) => {
+  try {
+    const allProducts = await Product.find();
+    return res.status(200).json(allProducts);
+  } catch (error) {
+    return res.json(error.message);
+  }
+});
+
 module.exports = productRouter;
