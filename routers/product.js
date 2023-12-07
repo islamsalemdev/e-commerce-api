@@ -107,4 +107,13 @@ productRouter.get("/api/v1/product/get-all", async (req, res) => {
   }
 });
 
+productRouter.get("/api/v1/product/featured", async (req, res) => {
+  try {
+    const featuredProducts = await Product.find({ isFeatured: false });
+    return res.status(200).json(featuredProducts);
+  } catch (error) {
+    return res.json(error.message);
+  }
+});
+
 module.exports = productRouter;
