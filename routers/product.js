@@ -109,10 +109,35 @@ productRouter.get("/api/v1/product/get-all", async (req, res) => {
 
 productRouter.get("/api/v1/product/featured", async (req, res) => {
   try {
-    const featuredProducts = await Product.find({ isFeatured: false });
+    const featuredProducts = await Product.find({ isFeatured: true });
     return res.status(200).json(featuredProducts);
   } catch (error) {
     return res.json(error.message);
+  }
+});
+
+productRouter.put("/api/v1/update-product/:id", async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    // Use findById to get a single product by ID
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.name = req.body.name;
+    product.price = req.body.price ?? product.price;
+    product.isFeatured = req.body.isFeatured ?? product.isFeatured;
+    await product.save();
+    res.json({
+      message: "Product updated  Successfully",
+      deleted_product: product,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

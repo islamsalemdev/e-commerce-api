@@ -86,13 +86,13 @@ router.delete("/api/v1/news/delete-news/:id", async (req, res) => {
     const news = await NewsSchema.findById(newsId);
 
     if (!news) {
-      return res.status(404).json({ message: "Product not found" });
+      return res.status(404).json({ message: "news not found" });
     }
 
     await news.deleteOne(news._id);
     res.json({
       message: "Product Deleted Successfully",
-      deleted_product: news,
+      deleted_news: news,
     });
   } catch (error) {
     console.error(error);

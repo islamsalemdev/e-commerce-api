@@ -7,11 +7,28 @@ const orderItemRouter = require("./routers/orderItem");
 const categoryRouter = require("./routers/category");
 const wishlistRouter = require("./routers/wishlist");
 const newsRouter = require("./routers/news_router");
+const i18n = require("i18n");
+const flutterRouter = require("./routers/flutter");
+const path = require("path");
+const langRouter = require("./routers/lang");
 //middleware
 app.use(express.json());
 
+//localization
+i18n.configure({
+  locales: ["en", "ar"],
+  defaultLocale: "en",
+  directory: __dirname + "/locales",
+  objectNotation: true,
+});
+
+// Use i18n middleware
+app.use(i18n.init);
+
 // Routers
 app.use(authRouter);
+app.use(langRouter);
+app.use(flutterRouter);
 app.use(productRouter);
 app.use(wishlistRouter);
 app.use(newsRouter);

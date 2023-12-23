@@ -3,22 +3,38 @@ const router = express.Router();
 const Category = require("../models/category");
 
 router.post("/api/v1/add-category", async (req, res) => {
-  const { name, icon, color } = req.body;
-  const categoryModel = await Category.findOne({ name });
-  if (categoryModel) {
+  try {
+    const { name, icon, color } = req.body;
+
+    // Check if the category already exists
+    const existingCategory = await Category.findOne({ name });
+
+    if (existingCategory) {
+      return res.status(500).json({
+        message: "This category already exists",
+      });
+    }
+
+    // Create a new category model
+    const newCategory = new Category({
+      name: name,
+      icon: icon,
+      color: color,
+    });
+
+    // Save the new category to the database
+    await newCategory.save();
+
+    res.status(200).json({
+      message: "Category has been created",
+      category: newCategory,
+    });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({
-      message: "this category already exist",
+      message: "Internal Server Error",
     });
   }
-
-  const category = new Category({
-    name: name,
-    icon: icon,
-    color: color,
-  });
-
-  await category.save();
-  res.json(category);
 });
 
 router.get("/api/v1/get-categories", async (req, res) => {

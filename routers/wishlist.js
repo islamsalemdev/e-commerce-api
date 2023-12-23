@@ -15,12 +15,14 @@ router.post("/api/v1/wishlist/add-product", async (req, res) => {
         message: "This product already exist",
       });
     }
-    const wishProduct = new Wishlist({
+    const wishListProduct = new Wishlist({
       product: req.body.product,
       user: req.body.user,
     });
-    await wishProduct.save();
-    return res.status(200).json(wishProduct);
+    await wishListProduct.save();
+    return res
+      .status(200)
+      .json({ message: "product has been added to wishlist", wishListProduct });
   } catch (error) {
     return res.json({ message: error.message });
   }
@@ -52,7 +54,7 @@ router.get("/api/v1/wishlist/get-products/:id", async (req, res) => {
   try {
     const userId = req.params.id;
     const userWishlist = await WishlistModel.find({ user: userId }).populate({
-      path: "product",
+      path: "product user",
     });
     if (!userWishlist) {
       res.status(401).json({ message: "No Product found" });
