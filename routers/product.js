@@ -3,6 +3,7 @@ const productRouter = express.Router();
 const Product = require("../models/product");
 const multer = require("multer");
 const path = require("path");
+const isAdmin = require("../middlewares/admin");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -22,9 +23,11 @@ const upload = multer({ storage: storage });
 
 productRouter.post(
   "/api/v1/add-product",
+  isAdmin,
   upload.array("images", 3),
   async (req, res) => {
     try {
+      // isAdmin middleware will ensure that only admins reach this point
       // Check if the product with the given name already exists
       const existingProduct = await Product.findOne({ name: req.body.name });
 

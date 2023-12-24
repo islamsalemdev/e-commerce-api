@@ -3,6 +3,7 @@ const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
+const authMiddleWare = require("../middlewares/auth");
 
 authRouter.post("/api/v1/register", async (req, res) => {
   var {
@@ -16,6 +17,7 @@ authRouter.post("/api/v1/register", async (req, res) => {
     street,
     zip,
     country,
+    role,
   } = req.body;
   const existUser = await User.findOne({ email });
 
@@ -38,6 +40,7 @@ authRouter.post("/api/v1/register", async (req, res) => {
       street: street,
       zip: zip,
       country: country,
+      role: role,
     });
     user = await user.save();
 
@@ -71,25 +74,36 @@ authRouter.post("/api/v1/login", async (req, res) => {
   }
 });
 
-authRouter.put("/api/v1/userUpdatePassword/:id", async (req, res) => {
-  try {
-    const password = req.body.password;
+authRouter.put(
+  "/api/v1/userUpdatePassword/:id",
+  authMiddleWare,
+  async (req, res) => {
+    try {
+      const password = req.body.password;
 
-    const user = await User.findById(req.params.id);
-    if (user.password == password) {
-      return res.status(400).json({ msg: "This password used before" });
+      // Use findByIdAndUpdate instead of findOneAndUpdate
+      const findUserAndUpdatePassword = await User.findByIdAndUpdate(
+        req.params.id,
+        { password: password },
+        { new: true }, // This ensures you get the updated document
+      );
+
+      // Check if the user is found
+      if (!findUserAndUpdatePassword) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      // The updated user is now findUserAndUpdatePassword, not user
+      res.json({
+        message: "Password updated",
+        new_password: findUserAndUpdatePassword,
+      });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
     }
-    //    if (password === user.password) {
-    //     return res.status(400).json({message:"this password is already exsit"});
-    //    }
-    user.password = password;
-    await user.save();
+  },
+);
 
-    res.json({ message: "password updated", new_password: user.password });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
 authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -117,6 +131,24 @@ authRouter.get("/api/v1/get-users", async (req, res) => {
     //    }
 
     res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+authRouter.delete("/api/v1/delete-user/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findOneAndDelete(userId);
+    if (!user) {
+      return res.status(400).json({ msg: "This user is not exist" });
+    }
+    //    if (password === user.password) {
+    //     return res.status(400).json({message:"this password is already exsit"});
+    //    }
+
+    res.json({ message: "User deleted", deleted_user: user });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
