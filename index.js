@@ -14,6 +14,7 @@ const langRouter = require("./routers/lang");
 
 //middleware
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 //localization
 i18n.configure({
