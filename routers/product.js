@@ -23,7 +23,7 @@ const upload = multer({ storage: storage });
 
 productRouter.post(
   "/api/v1/add-product",
-  isAdmin,
+
   upload.array("images", 3),
   async (req, res) => {
     try {
