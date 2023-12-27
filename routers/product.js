@@ -41,7 +41,7 @@ productRouter.post(
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
-        image: req.files[0].path, // Assuming you want to save the path of the first image as the main image
+        image: req.files[0].path ?? "", // Assuming you want to save the path of the first image as the main image
         images: req.files.map((file) => file.path),
         brand: req.body.brand,
         price: req.body.price,
