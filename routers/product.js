@@ -7,7 +7,7 @@ const isAdmin = require("../middlewares/admin");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Set the destination folder for uploaded files
+    cb(null, "uploads"); // Set the destination folder for uploaded files
   },
   filename: function (req, file, cb) {
     // Set the file name to be unique by appending a timestamp
@@ -18,6 +18,7 @@ const storage = multer.diskStorage({
     );
   },
 });
+// post new product
 
 const upload = multer({ storage: storage });
 
