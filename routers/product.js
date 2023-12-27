@@ -52,7 +52,7 @@ productRouter.post(
 
       await productModel.save();
 
-      res.status(200).json({ productId: productModel._id });
+      res.status(200).json({ productId: productModel });
     } catch (error) {
       console.error(error);
       res
