@@ -29,19 +29,17 @@ productRouter.post(
   upload.array("images", 3),
   async (req, res) => {
     try {
-      // isAdmin middleware will ensure that only admins reach this point
-      // Check if the product with the given name already exists
       const existingProduct = await Product.findOne({ name: req.body.name });
 
       if (existingProduct) {
         return res.status(400).json({ message: "This product already exists" });
       }
 
-      let productModel = new Product({
+      const productModel = new Product({
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
-        image: req.files[0].path ?? "", // Assuming you want to save the path of the first image as the main image
+        image: req.files[0].path ?? "",
         images: req.files.map((file) => file.path) ?? [],
         brand: req.body.brand,
         price: req.body.price,
@@ -53,10 +51,13 @@ productRouter.post(
       });
 
       await productModel.save();
-      res.status(200).json(productModel);
+
+      res.status(200).json({ productId: productModel._id });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      res
+        .status(500)
+        .json({ message: "Failed to add the product", error: error.message });
     }
   },
 );
