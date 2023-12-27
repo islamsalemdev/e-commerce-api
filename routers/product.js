@@ -4,6 +4,7 @@ const Product = require("../models/product");
 const multer = require("multer");
 const path = require("path");
 const isAdmin = require("../middlewares/admin");
+const admin = require("../middlewares/admin");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
