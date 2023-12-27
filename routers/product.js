@@ -39,7 +39,7 @@ productRouter.post(
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
-        image: req.files[0].path ?? "",
+        image: "",
         images: req.files.map((file) => file.path) ?? [],
         brand: req.body.brand,
         price: req.body.price,
