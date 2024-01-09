@@ -7,12 +7,15 @@ const orderItemRouter = require("./routers/orderItem");
 const categoryRouter = require("./routers/category");
 const wishlistRouter = require("./routers/wishlist");
 const newsRouter = require("./routers/news_router");
+const orderRouter = require("./routers/order");
 const i18n = require("i18n");
 const flutterRouter = require("./routers/flutter");
 const path = require("path");
 const langRouter = require("./routers/lang");
+const cors = require("cors");
 
 //middleware
+app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -30,6 +33,7 @@ app.use(i18n.init);
 // Routers
 app.use(authRouter);
 app.use(langRouter);
+app.use(orderRouter);
 app.use(flutterRouter);
 app.use(productRouter);
 app.use(wishlistRouter);

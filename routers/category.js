@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
 
-router.post("/api/v1/add-category", async (req, res) => {
+router.post("/api/v1/category/add", async (req, res) => {
   try {
     const { name, icon, color } = req.body;
 
@@ -37,13 +37,13 @@ router.post("/api/v1/add-category", async (req, res) => {
   }
 });
 
-router.get("/api/v1/get-categories", async (req, res) => {
+router.get("/api/v1/category/get-all", async (req, res) => {
   const getCategories = await Category.find();
 
   res.json(getCategories);
 });
 
-router.put("/api/v1/update-category/:id", async (req, res) => {
+router.put("/api/v1/category/update/:id", async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
 
@@ -71,7 +71,7 @@ router.put("/api/v1/update-category/:id", async (req, res) => {
   }
 });
 
-router.delete("/api/v1/delete-category/:id", async (req, res) => {
+router.delete("/api/v1/category/delete/:id", async (req, res) => {
   try {
     const categoryId = req.params.id;
 

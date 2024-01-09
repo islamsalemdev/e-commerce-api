@@ -5,7 +5,7 @@ const OrderItemRouter = express.Router();
 
 // });
 
-OrderItemRouter.get("/api/v1/post-order-item", async (req, res) => {
+OrderItemRouter.get("/api/v1/order/create", async (req, res) => {
   let { product, quantity } = req.body;
   const orderItem = new OrderItem({
     product: product,
@@ -15,6 +15,8 @@ OrderItemRouter.get("/api/v1/post-order-item", async (req, res) => {
   res.json(orderItem);
 });
 
-OrderItemRouter.delete("/api/v1/delete-order-item/:id", (req, res) => {});
+OrderItemRouter.delete("/api/v1/order/deleteById/:id", async (req, res) => {
+  const getOrder = await Order;
+});
 
 module.exports = OrderItemRouter;

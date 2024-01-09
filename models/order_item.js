@@ -10,5 +10,5 @@ const orderItemSchema = mongoose.Schema({
     ref: "Product",
   },
 });
-
-module.exports = mongoose.model("OrderItem", orderItemSchema);
+const OrderItem = mongoose.model("OrderItem", orderItemSchema);
+module.exports = OrderItem;

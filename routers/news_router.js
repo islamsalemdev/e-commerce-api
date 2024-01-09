@@ -23,7 +23,7 @@ const upload = require("../helpers/upload_image");
 // const upload = multer({ storage: storage });
 
 router.post(
-  "/api/v1/news/add-news",
+  "/api/v1/news/create",
   upload.single("newsImage"),
   async (req, res) => {
     try {
@@ -44,7 +44,7 @@ router.post(
   },
 );
 
-router.get("/api/v1/news/get-news/:id", async (req, res) => {
+router.get("/api/v1/news/getById/:id", async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -78,7 +78,7 @@ router.get("/api/v1/news/get-all", async (req, res) => {
   }
 });
 
-router.delete("/api/v1/news/delete-news/:id", async (req, res) => {
+router.delete("/api/v1/news/deleteById/:id", async (req, res) => {
   try {
     const newsId = req.params.id;
 
@@ -100,7 +100,7 @@ router.delete("/api/v1/news/delete-news/:id", async (req, res) => {
   }
 });
 
-router.put("/api/v1/news/update-news/:id", async (req, res) => {
+router.put("/api/v1/news/updateById/:id", async (req, res) => {
   try {
     const news = await NewsSchema.findById(req.params.id);
 

@@ -74,37 +74,33 @@ authRouter.post("/api/v1/login", async (req, res) => {
   }
 });
 
-authRouter.put(
-  "/api/v1/userUpdatePassword/:id",
-  authMiddleWare,
-  async (req, res) => {
-    try {
-      const password = req.body.password;
+authRouter.put("/api/v1/update-user/:id", authMiddleWare, async (req, res) => {
+  try {
+    const password = req.body.password;
 
-      // Use findByIdAndUpdate instead of findOneAndUpdate
-      const findUserAndUpdatePassword = await User.findByIdAndUpdate(
-        req.params.id,
-        { password: password },
-        { new: true }, // This ensures you get the updated document
-      );
+    // Use findByIdAndUpdate instead of findOneAndUpdate
+    const findUserAndUpdatePassword = await User.findByIdAndUpdate(
+      req.params.id,
+      { password: password },
+      { new: true }, // This ensures you get the updated document
+    );
 
-      // Check if the user is found
-      if (!findUserAndUpdatePassword) {
-        return res.status(404).json({ msg: "User not found" });
-      }
-
-      // The updated user is now findUserAndUpdatePassword, not user
-      res.json({
-        message: "Password updated",
-        new_password: findUserAndUpdatePassword,
-      });
-    } catch (e) {
-      res.status(500).json({ error: e.message });
+    // Check if the user is found
+    if (!findUserAndUpdatePassword) {
+      return res.status(404).json({ msg: "User not found" });
     }
-  },
-);
 
-authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
+    // The updated user is now findUserAndUpdatePassword, not user
+    res.json({
+      message: "Password updated",
+      new_password: findUserAndUpdatePassword,
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+authRouter.get("/api/v1/get-user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
@@ -120,7 +116,7 @@ authRouter.get("/api/v1/getUserData/:id", async (req, res) => {
   }
 });
 
-authRouter.get("/api/v1/get-users", async (req, res) => {
+authRouter.get("/api/v1/get-all-users", async (req, res) => {
   try {
     const user = await User.find();
     if (!user) {
