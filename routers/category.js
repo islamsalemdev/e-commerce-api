@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
+const admin = require("../middlewares/admin");
 
-router.post("/api/v1/category/add", async (req, res) => {
+router.post("/api/v1/category/add", admin, async (req, res) => {
   try {
     const { name, icon, color } = req.body;
 

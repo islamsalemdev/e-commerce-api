@@ -7,13 +7,13 @@ const admin = async (req, res, next) => {
     if (!token)
       return res.status(401).json({ msg: "No auth token, access denied" });
 
-    const verified = jwt.verify(token, "passwordKey");
+    const verified = jwt.verify(token, process.env.PASSWORD_KEY);
     if (!verified)
       return res
         .status(401)
         .json({ msg: "Token verification failed, authorization denied." });
     const user = await User.findById(verified.id);
-    if (user.role == "user" || user.role == "seller") {
+    if (user.isAdmin == false) {
       return res.status(401).json({ msg: "You are not an admin!" });
     }
     req.user = verified.id;

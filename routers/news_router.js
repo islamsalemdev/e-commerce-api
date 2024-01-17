@@ -4,7 +4,8 @@ const router = express.Router();
 // const multer = require("multer");
 // const path = require("path");
 const NewsSchema = require("../models/news");
-const upload = require("../helpers/upload_image");
+const admin = require("../middlewares/admin");
+const upload = require("../middlewares/upload_image");
 
 // const storage = multer.diskStorage({
 //   destination: function (req, file, cb) {
@@ -24,10 +25,13 @@ const upload = require("../helpers/upload_image");
 
 router.post(
   "/api/v1/news/create",
-  upload.single("newsImage"),
+  upload.single("image"),
+  admin,
+
   async (req, res) => {
     try {
       const existedNews = await NewsSchema.findOne({ title: req.body.title });
+
       if (existedNews) {
         return res.status(400).json({ message: "This News already exist" });
       }
@@ -36,6 +40,15 @@ router.post(
         content: req.body.content,
         image: req.file.path,
       });
+      addedNews.validateSync();
+
+      // // upload.single("image");
+      // const addedNews = new NewsSchema({
+      //   title: req.body.title,
+      //   content: req.body.content,
+      //   image: req.file.path,
+      // });
+      // addedNews.validateSync();
       await addedNews.save();
       res.status(200).json(addedNews);
     } catch (error) {
@@ -78,7 +91,7 @@ router.get("/api/v1/news/get-all", async (req, res) => {
   }
 });
 
-router.delete("/api/v1/news/deleteById/:id", async (req, res) => {
+router.delete("/api/v1/news/deleteById/:id", admin, async (req, res) => {
   try {
     const newsId = req.params.id;
 
@@ -100,7 +113,7 @@ router.delete("/api/v1/news/deleteById/:id", async (req, res) => {
   }
 });
 
-router.put("/api/v1/news/updateById/:id", async (req, res) => {
+router.put("/api/v1/news/updateById/:id", admin, async (req, res) => {
   try {
     const news = await NewsSchema.findById(req.params.id);
 

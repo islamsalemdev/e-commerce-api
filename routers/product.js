@@ -1,30 +1,13 @@
 const express = require("express");
-const productRouter = express.Router();
+const router = express.Router();
 const Product = require("../models/product");
-const multer = require("multer");
-const path = require("path");
-const isAdmin = require("../middlewares/admin");
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads"); // Set the destination folder for uploaded files
-  },
-  filename: function (req, file, cb) {
-    // Set the file name to be unique by appending a timestamp
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname),
-    );
-  },
-});
-// post new product
+const admin = require("../middlewares/admin");
+const upload = require("../middlewares/upload_image");
 
-const upload = multer({ storage: storage });
-
-productRouter.post(
+router.post(
   "/api/v1/add-product",
-  isAdmin,
+  admin,
   upload.array("images", 3),
   async (req, res) => {
     try {
@@ -61,7 +44,7 @@ productRouter.post(
   },
 );
 
-productRouter.get("/api/v1/get-product/:id", async (req, res) => {
+router.get("/api/v1/get-product/:id", async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -81,7 +64,7 @@ productRouter.get("/api/v1/get-product/:id", async (req, res) => {
   }
 });
 
-productRouter.delete("/api/v1/delete-product/:id", async (req, res) => {
+router.delete("/api/v1/delete-product/:id", admin, async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -103,7 +86,7 @@ productRouter.delete("/api/v1/delete-product/:id", async (req, res) => {
   }
 });
 
-productRouter.get("/api/v1/product/get-all", async (req, res) => {
+router.get("/api/v1/product/get-all", async (req, res) => {
   try {
     const allProducts = await Product.find();
     return res.status(200).json(allProducts);
@@ -112,7 +95,7 @@ productRouter.get("/api/v1/product/get-all", async (req, res) => {
   }
 });
 
-productRouter.get("/api/v1/product/featured", async (req, res) => {
+router.get("/api/v1/product/featured", async (req, res) => {
   try {
     const featuredProducts = await Product.find({ isFeatured: true });
     return res.status(200).json(featuredProducts);
@@ -121,7 +104,7 @@ productRouter.get("/api/v1/product/featured", async (req, res) => {
   }
 });
 
-productRouter.put("/api/v1/update-product/:id", async (req, res) => {
+router.put("/api/v1/update-product/:id", admin, async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -146,4 +129,4 @@ productRouter.put("/api/v1/update-product/:id", async (req, res) => {
   }
 });
 
-module.exports = productRouter;
+module.exports = router;

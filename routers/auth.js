@@ -3,7 +3,7 @@ const User = require("../models/user");
 const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
-const authMiddleWare = require("../middlewares/auth");
+const userAuth = require("../middlewares/auth");
 
 authRouter.post("/api/v1/register", async (req, res) => {
   var {
@@ -74,7 +74,7 @@ authRouter.post("/api/v1/login", async (req, res) => {
   }
 });
 
-authRouter.put("/api/v1/update-user/:id", authMiddleWare, async (req, res) => {
+authRouter.put("/api/v1/update-user/:id", userAuth, async (req, res) => {
   try {
     const password = req.body.password;
 

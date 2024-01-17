@@ -3,7 +3,7 @@ const newsSchema = mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "title must be filled"],
     },
     content: {
       type: String,
