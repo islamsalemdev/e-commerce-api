@@ -4,6 +4,7 @@ const Product = require("../models/product");
 
 const admin = require("../middlewares/admin");
 const upload = require("../middlewares/upload_image");
+const userAuth = require("../middlewares/auth");
 
 router.post(
   "/api/v1/add-product",
@@ -30,6 +31,8 @@ router.post(
         rating: req.body.rating,
         numReviews: req.body.numReviews,
         isFeatured: req.body.isFeatured,
+        bestSeller: req.body.bestSeller,
+        newArrival: req.body.newArrival,
       });
 
       await productModel.save();
@@ -95,10 +98,33 @@ router.get("/api/v1/product/get-all", async (req, res) => {
   }
 });
 
+//get featured product
 router.get("/api/v1/product/featured", async (req, res) => {
   try {
     const featuredProducts = await Product.find({ isFeatured: true });
     return res.status(200).json(featuredProducts);
+  } catch (error) {
+    return res.json(error.message);
+  }
+});
+
+//get best seller product
+
+router.get("/api/v1/product/best-seller", async (req, res) => {
+  try {
+    const bestSellerProducts = await Product.find({ bestSeller: true });
+    return res.status(200).json(bestSellerProducts);
+  } catch (error) {
+    return res.json(error.message);
+  }
+});
+
+// get new arrival product
+
+router.get("/api/v1/product/new-arrival", async (req, res) => {
+  try {
+    const newArrivalProduct = await Product.find({ newArrival: true });
+    return res.status(200).json(newArrivalProduct);
   } catch (error) {
     return res.json(error.message);
   }

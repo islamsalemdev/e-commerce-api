@@ -1,11 +1,12 @@
 const express = require("express");
+const userAuth = require("../middlewares/auth");
 const OrderItemRouter = express.Router();
 
 // OrderItemRouter.get('/api/v1/get-order-item', (req, res)=> {
 
 // });
 
-OrderItemRouter.get("/api/v1/order/create", async (req, res) => {
+OrderItemRouter.get("/api/v1/order/create", userAuth, async (req, res) => {
   let { product, quantity } = req.body;
   const orderItem = new OrderItem({
     product: product,

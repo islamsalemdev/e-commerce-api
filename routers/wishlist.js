@@ -3,8 +3,9 @@ const router = express.Router();
 const Wishlist = require("../models/wishlist_model");
 const mongoose = require("mongoose");
 const WishlistModel = require("../models/wishlist_model");
+const userAuth = require("../middlewares/auth");
 
-router.post("/api/v1/wishlist/add-product", async (req, res) => {
+router.post("/api/v1/wishlist/add-product", userAuth, async (req, res) => {
   try {
     const existedProduct = await Wishlist.findOne({
       product: req.body.product,
@@ -28,17 +29,8 @@ router.post("/api/v1/wishlist/add-product", async (req, res) => {
   }
 });
 
-router.get("/api/v1/wishlist/get-products", async (req, res) => {
+router.get("/api/v1/wishlist/get-products", userAuth, async (req, res) => {
   try {
-    //   const existedProduct = await Wishlist.findOne({
-    //     product: req.body.product,
-    //     user: req.body.user,
-    //   });
-    //   if (existedProduct) {
-    //     return res.status(401).json({
-    //       message: "This product already exist",
-    //     });
-    //   }
     const wishProduct = await Wishlist.find().populate({
       path: "product user",
     });
@@ -50,7 +42,7 @@ router.get("/api/v1/wishlist/get-products", async (req, res) => {
 });
 
 // get wishlist for specific user
-router.get("/api/v1/wishlist/get-products/:id", async (req, res) => {
+router.get("/api/v1/wishlist/get-products/:id", userAuth, async (req, res) => {
   try {
     const userId = req.params.id;
     const userWishlist = await WishlistModel.find({ user: userId }).populate({
@@ -72,6 +64,7 @@ router.get("/api/v1/wishlist/get-products/:id", async (req, res) => {
 
 router.delete(
   "/api/v1/wishlist/delete-product/:userId/:productId",
+  userAuth,
   async (req, res) => {
     try {
       const productId = req.params.productId;
@@ -101,6 +94,7 @@ router.delete(
 
 router.delete(
   "/api/v1/wishlist/delete-all-product/:userId",
+  userAuth,
   async (req, res) => {
     try {
       const userId = req.params.userId;

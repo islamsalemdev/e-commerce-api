@@ -2,49 +2,55 @@ const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
 const admin = require("../middlewares/admin");
+const upload = require("../middlewares/upload_image");
 
-router.post("/api/v1/category/add", admin, async (req, res) => {
-  try {
-    const { name, icon, color } = req.body;
+router.post(
+  "/api/v1/category/add",
+  admin,
+  upload.single("icon"),
+  async (req, res) => {
+    try {
+      const { name, icon, color } = req.body;
 
-    // Check if the category already exists
-    const existingCategory = await Category.findOne({ name });
+      // Check if the category already exists
+      const existingCategory = await Category.findOne({ name });
 
-    if (existingCategory) {
-      return res.status(500).json({
-        message: "This category already exists",
+      if (existingCategory) {
+        return res.status(500).json({
+          message: "This category already exists",
+        });
+      }
+
+      // Create a new category model
+      const newCategory = new Category({
+        name: name,
+        icon: req.file.path,
+        color: color,
+      });
+
+      // Save the new category to the database
+      await newCategory.save();
+
+      res.status(200).json({
+        message: "Category has been created",
+        category: newCategory,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: "Internal Server Error",
       });
     }
+  },
+);
 
-    // Create a new category model
-    const newCategory = new Category({
-      name: name,
-      icon: icon,
-      color: color,
-    });
-
-    // Save the new category to the database
-    await newCategory.save();
-
-    res.status(200).json({
-      message: "Category has been created",
-      category: newCategory,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Internal Server Error",
-    });
-  }
-});
-
-router.get("/api/v1/category/get-all", async (req, res) => {
+router.get("/api/v1/category/get-all", admin, async (req, res) => {
   const getCategories = await Category.find();
 
   res.json(getCategories);
 });
 
-router.put("/api/v1/category/update/:id", async (req, res) => {
+router.put("/api/v1/category/update/:id", admin, async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
 
@@ -72,7 +78,7 @@ router.put("/api/v1/category/update/:id", async (req, res) => {
   }
 });
 
-router.delete("/api/v1/category/delete/:id", async (req, res) => {
+router.delete("/api/v1/category/delete/:id", admin, async (req, res) => {
   try {
     const categoryId = req.params.id;
 
