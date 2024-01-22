@@ -25,7 +25,7 @@ const upload = require("../middlewares/upload_image");
 
 router.post(
   "/api/v1/news/create",
-  upload.single("image"),
+
   admin,
 
   async (req, res) => {
@@ -39,6 +39,8 @@ router.post(
         title: req.body.title,
         content: req.body.content,
         image: req.file.path,
+      }).then((value) => {
+        upload.single("image");
       });
       addedNews.validateSync();
 
