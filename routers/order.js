@@ -1,27 +1,3 @@
-// const express = require("express");
-// const OrderItemRouter = express.Router();
-// const Order = require("../models/order");
-
-// // OrderItemRouter.get('/api/v1/get-order-item', (req, res)=> {
-
-// // });
-
-// OrderItemRouter.get("/api/v1/order/create", async (req, res) => {
-//   let { product, quantity } = req.body;
-//   const orderItem = new OrderItem({
-//     product: product,
-//     quantity: quantity,
-//   });
-//   await orderItem.save();
-//   res.json(orderItem);
-// });
-
-// OrderItemRouter.delete("/api/v1/order/deleteById/:id", async (req, res) => {
-//   const getOrder = await Order;
-// });
-
-// module.exports = OrderItemRouter;
-
 const express = require("express");
 const router = express();
 
@@ -30,8 +6,9 @@ const Order = require("../models/order");
 const admin = require("../middlewares/admin");
 const auth = require("../middlewares/auth");
 const { json } = require("body-parser");
+const userAuth = require("../middlewares/auth");
 
-router.get("/api/v1/order/getOrdersList", async (req, res) => {
+router.get("/api/v1/order/getOrdersList", userAuth, async (req, res) => {
   const orderList = await Order.find()
     .populate("user", "name")
     .sort({ dateOrdered: -1 })
@@ -49,7 +26,7 @@ router.get("/api/v1/order/getOrdersList", async (req, res) => {
   res.json(orderList);
 });
 
-router.get("/api/v1/order/getOrderById/:id", async (req, res) => {
+router.get("/api/v1/order/getOrderById/:id", userAuth, async (req, res) => {
   const order = await Order.findById(req.params.id).populate("name", "user");
 
   if (!order) {
@@ -58,7 +35,7 @@ router.get("/api/v1/order/getOrderById/:id", async (req, res) => {
   res.send(order);
 });
 
-router.post("/api/v1/order/create", async (req, res) => {
+router.post("/api/v1/order/create", userAuth, async (req, res) => {
   try {
     const {
       orderItems,
@@ -182,7 +159,7 @@ router.delete(
   },
 );
 
-router.get("/api/v1/order/getOrdersCount", async (req, res) => {
+router.get("/api/v1/order/getOrdersCount", admin, async (req, res) => {
   const orderCount = await Order.countDocuments((count) => count);
   if (!orderCount) {
     res.status(500), json({ success: false });
@@ -192,7 +169,7 @@ router.get("/api/v1/order/getOrdersCount", async (req, res) => {
   });
 });
 
-router.get("/api/v1/order/get/totalsales", async (req, res) => {
+router.get("/api/v1/order/get/totalsales", admin, async (req, res) => {
   const totalSales = await Order.aggregate([
     { $group: { _id: null, totalsales: { $sum: "$totalPrice" } } },
   ]);

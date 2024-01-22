@@ -7,7 +7,7 @@ const newsSchema = mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "content must be filled"],
     },
     image: {
       type: String,

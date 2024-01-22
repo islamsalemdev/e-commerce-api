@@ -4,6 +4,7 @@ const bcryptjs = require("bcryptjs");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const userAuth = require("../middlewares/auth");
+const admin = require("../middlewares/admin");
 
 authRouter.post("/api/v1/register", async (req, res) => {
   var {
@@ -116,7 +117,7 @@ authRouter.get("/api/v1/get-user/:id", async (req, res) => {
   }
 });
 
-authRouter.get("/api/v1/get-all-users", async (req, res) => {
+authRouter.get("/api/v1/get-all-users", admin, async (req, res) => {
   try {
     const user = await User.find();
     if (!user) {
