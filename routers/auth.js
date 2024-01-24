@@ -5,6 +5,7 @@ const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
 const userAuth = require("../middlewares/auth");
 const admin = require("../middlewares/admin");
+const handleValidationError = require("../middlewares/error_handler");
 
 authRouter.post("/api/v1/register", async (req, res) => {
   var {
@@ -43,12 +44,12 @@ authRouter.post("/api/v1/register", async (req, res) => {
       country: country,
       role: role,
     });
+    user.validateSync();
     user = await user.save();
 
     res.json({ status: "Success", user_data: user });
   } catch (error) {
-    res.json({ error_message: error });
-    console.log(error);
+    handleValidationError(error, req, res);
   }
 });
 
