@@ -24,6 +24,7 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      min: [8, "password must be more than 8 characters"],
     },
     phone: {
       type: String,

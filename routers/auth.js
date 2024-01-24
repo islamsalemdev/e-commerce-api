@@ -44,7 +44,7 @@ authRouter.post("/api/v1/register", async (req, res) => {
       country: country,
       role: role,
     });
-    user.validateSync();
+
     user = await user.save();
 
     res.json({ status: "Success", user_data: user });
@@ -76,7 +76,7 @@ authRouter.post("/api/v1/login", async (req, res) => {
   }
 });
 
-authRouter.put("/api/v1/update-user/:id", userAuth, async (req, res) => {
+authRouter.patch("/api/v1/update-user/:id", userAuth, async (req, res) => {
   try {
     const password = req.body.password;
 
