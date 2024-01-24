@@ -8,7 +8,7 @@ const handleValidationError = require("../middlewares/error_handler");
 
 router.post(
   "/api/v1/news/create",
-  upload.single("image"),
+
   admin,
 
   async (req, res, next) => {
@@ -23,6 +23,8 @@ router.post(
         title: req.body.title,
         content: req.body.content,
         image: req.file.path,
+      }).then((value) => {
+        upload.single("image");
       });
       addedNews.validateSync();
 
