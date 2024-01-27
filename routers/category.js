@@ -3,6 +3,7 @@ const router = express.Router();
 const Category = require("../models/category");
 const admin = require("../middlewares/admin");
 const upload = require("../middlewares/upload_image");
+const handleValidationError = require("../middlewares/error_handler");
 
 router.post(
   "/api/v1/category/add",
@@ -27,6 +28,7 @@ router.post(
         icon: req.file.path,
         color: color,
       });
+      newCategory.validateSync();
 
       // Save the new category to the database
       await newCategory.save();
@@ -37,9 +39,7 @@ router.post(
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({
-        message: "Internal Server Error",
-      });
+      handleValidationError(error, req, res);
     }
   },
 );

@@ -24,7 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //localization
 i18n.configure({
   locales: ["en", "ar"],
-  defaultLocale: "en",
+  defaultLocale: "ar",
   directory: __dirname + "/locales",
   objectNotation: true,
 });
