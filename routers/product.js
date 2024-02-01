@@ -142,12 +142,15 @@ router.put("/api/v1/update-product/:id", admin, async (req, res) => {
     }
 
     product.name = req.body.name;
+    product.description = req.body.description;
     product.price = req.body.price ?? product.price;
     product.isFeatured = req.body.isFeatured ?? product.isFeatured;
+
     await product.save();
+    await product.populate({ path: "category" });
     res.json({
       message: "Product updated  Successfully",
-      deleted_product: product,
+      updated_products: product,
     });
   } catch (error) {
     console.error(error);

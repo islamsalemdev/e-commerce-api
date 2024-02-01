@@ -20,7 +20,9 @@ router.post("/api/v1/wishlist/add-product", userAuth, async (req, res) => {
       product: req.body.product,
       user: req.body.user,
     });
+
     await wishListProduct.save();
+
     return res
       .status(200)
       .json({ message: "product has been added to wishlist", wishListProduct });
@@ -31,9 +33,11 @@ router.post("/api/v1/wishlist/add-product", userAuth, async (req, res) => {
 
 router.get("/api/v1/wishlist/get-products", userAuth, async (req, res) => {
   try {
-    const wishProduct = await Wishlist.find().populate({
-      path: "product user",
-    });
+    const wishProduct = await Wishlist.find()
+      .populate({
+        path: "product",
+      })
+      .populate({ path: "user" });
     // await wishProduct.save();
     return res.status(200).json(wishProduct);
   } catch (error) {
@@ -45,36 +49,30 @@ router.get("/api/v1/wishlist/get-products", userAuth, async (req, res) => {
 router.get("/api/v1/wishlist/get-products/:id", userAuth, async (req, res) => {
   try {
     const userId = req.params.id;
-    const userWishlist = await WishlistModel.find({ user: userId }).populate({
+
+    const userWishlists = await WishlistModel.find({ user: userId }).populate({
       path: "product user",
     });
-    if (!userWishlist) {
-      res.status(401).json({ message: "No Product found" });
+    if (!userWishlists) {
+      res.status(400).json({ message: "no prodduct found " });
     }
-    res.status(201).json(userWishlist);
-    // const wishProduct = await Wishlist.find().populate({
-    //   path: "product user",
-    // });
-    // // await wishProduct.save();
-    // return res.status(200).json(wishProduct);
+
+    res.status(200).json(userWishlists);
   } catch (error) {
-    return res.json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
 router.delete(
-  "/api/v1/wishlist/delete-product/:userId/:productId",
+  "/api/v1/wishlist/delete-product/:id",
   userAuth,
   async (req, res) => {
     try {
-      const productId = req.params.productId;
-      const userId = req.params.userId;
-
       // Use findById to get a single product by ID
-      const product = await WishlistModel.findOne({
-        user: userId,
-        product: productId,
-      });
+      const product = await WishlistModel.findById(req.params.id);
+      if (!product) {
+        res.status(500).json({ message: "product is not found " });
+      }
 
       // if (!product) {
       //   return res.status(404).json({ message: "Product not found" });
@@ -98,12 +96,12 @@ router.delete(
   async (req, res) => {
     try {
       const userId = req.params.userId;
-      const existedProduct = await WishlistModel.findOne({ user: userId });
+      const existedProduct = await WishlistModel.find({ user: userId });
       if (!existedProduct) {
         res.status(402).json({ message: "Product not found" });
       }
 
-      const deletedProduct = await WishlistModel.findOneAndDelete({
+      const deletedProduct = await WishlistModel.deleteMany({
         user: userId,
       })
         .populate({ path: "product" })

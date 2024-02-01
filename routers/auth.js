@@ -80,10 +80,12 @@ authRouter.patch("/api/v1/update-user/:id", userAuth, async (req, res) => {
   try {
     const password = req.body.password;
 
+    const hashedPassword = await bcryptjs.hash(password, 8);
+
     // Use findByIdAndUpdate instead of findOneAndUpdate
     const findUserAndUpdatePassword = await User.findByIdAndUpdate(
       req.params.id,
-      { password: password },
+      { password: hashedPassword },
       { new: true }, // This ensures you get the updated document
     );
 
@@ -134,7 +136,7 @@ authRouter.get("/api/v1/get-all-users", admin, async (req, res) => {
   }
 });
 
-authRouter.delete("/api/v1/delete-user/:id", async (req, res) => {
+authRouter.delete("/api/v1/delete-user/:id", admin, async (req, res) => {
   try {
     const userId = req.params.id;
 

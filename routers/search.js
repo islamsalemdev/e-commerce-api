@@ -5,10 +5,10 @@ const router = express.Router();
 
 //search for product
 
-router.post("/api/v1/products/search/", async (req, res) => {
+router.get("/api/v1/products/search/", async (req, res) => {
   const allProducts = await Product.find();
   try {
-    const { query } = req.body;
+    const { query } = req.query;
     if (!allProducts)
       return res.status(400).json({ message: "no product found" });
     const searchProduct = allProducts.filter((product) =>
@@ -23,19 +23,19 @@ router.post("/api/v1/products/search/", async (req, res) => {
 
 // search category
 
-router.post("/api/v1/category/search/", async (req, res) => {
-  const allProducts = await CategorySchema.find();
+router.get("/api/v1/category/search/", async (req, res) => {
+  const allCategories = await CategorySchema.find();
   try {
-    const { query } = req.body;
-    if (!allProducts || query == "")
+    const { query } = req.query;
+    if (!allCategories || query == "")
       return res.status(400).json({ message: "no product found" });
-    const searchProduct = allProducts.filter((product) =>
-      product.name.toLowerCase().includes(query.toLowerCase()),
+    const searchCategory = allCategories.filter((category) =>
+      category.name.toLowerCase().includes(query.toLowerCase()),
     );
-    res.status(200).json(searchProduct);
+    res.status(200).json(searchCategory);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: error.message });
   }
 });
 

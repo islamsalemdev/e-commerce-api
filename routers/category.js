@@ -4,6 +4,7 @@ const Category = require("../models/category");
 const admin = require("../middlewares/admin");
 const upload = require("../middlewares/upload_image");
 const handleValidationError = require("../middlewares/error_handler");
+const userAuth = require("../middlewares/auth");
 
 router.post(
   "/api/v1/category/add",
@@ -44,7 +45,7 @@ router.post(
   },
 );
 
-router.get("/api/v1/category/get-all", admin, async (req, res) => {
+router.get("/api/v1/category/get-all", async (req, res) => {
   const getCategories = await Category.find();
 
   res.json(getCategories);

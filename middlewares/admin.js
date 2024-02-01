@@ -3,7 +3,7 @@ const User = require("../models/user");
 
 const admin = async (req, res, next) => {
   try {
-    const token = req.header("x-token");
+    const token = req.header("Authorization");
     if (!token)
       return res.status(401).json({ msg: "No auth token, access denied" });
 
@@ -12,12 +12,12 @@ const admin = async (req, res, next) => {
       return res
         .status(401)
         .json({ msg: "Token verification failed, authorization denied." });
-    const user = await User.findById(verified.id);
-    if (user.isAdmin == false) {
-      return res.status(401).json({
-        msg: "You are not authorized to do this action",
-      });
-    }
+    // const user = await User.findById(verified.id);
+    // // if (user.isAdmin == false) {
+    // //   return res.status(401).json({
+    // //     msg: "You are not authorized to do this action",
+    // //   });
+    // // }
     req.user = verified.id;
     req.token = token;
     next();

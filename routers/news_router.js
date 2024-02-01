@@ -8,26 +8,20 @@ const handleValidationError = require("../middlewares/error_handler");
 
 router.post(
   "/api/v1/news/create",
-
   admin,
-
-  async (req, res, next) => {
+  upload.single("image"),
+  async (req, res) => {
     try {
       const existedNews = await NewsSchema.findOne({ title: req.body.title });
 
       if (existedNews) {
         return res.status(400).json({ message: "This News already exist" });
       }
-
       const addedNews = new NewsSchema({
         title: req.body.title,
         content: req.body.content,
-        image: req.file.path,
-      }).then((value) => {
-        upload.single("image");
+        image: req.file ? req.file.path : " ",
       });
-      addedNews.validateSync();
-
       await addedNews.save();
       res.status(200).json(addedNews);
     } catch (error) {
@@ -36,7 +30,7 @@ router.post(
   },
 );
 
-router.get("/api/v1/news/getById/:id", admin, async (req, res) => {
+router.get("/api/v1/news/getById/:id", async (req, res) => {
   try {
     const productId = req.params.id;
 
@@ -54,7 +48,7 @@ router.get("/api/v1/news/getById/:id", admin, async (req, res) => {
   }
 });
 
-router.get("/api/v1/news/get-all", admin, async (req, res) => {
+router.get("/api/v1/news/get-all", async (req, res) => {
   try {
     // Use findById to get a single product by ID
     const product = await NewsSchema.find();
@@ -92,27 +86,28 @@ router.delete("/api/v1/news/deleteById/:id", admin, async (req, res) => {
   }
 });
 
-router.put("/api/v1/news/updateById/:id", admin, async (req, res) => {
+router.patch("/api/v1/news/updateById/:id", admin, async (req, res) => {
   try {
-    const news = await NewsSchema.findById(req.params.id);
+    const updatedNews = await NewsSchema.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+        },
+      },
+      {
+        new: true,
+      },
+    );
 
-    if (!news) {
-      return res.status(404).json({ message: "news not found" });
+    if (!updatedNews) {
+      return res.status(404).json({ msg: "User not found" });
     }
-    const oldName = news.title;
-    if (news.title === req.body.title) {
-      return res
-        .status(401)
-        .json({ message: "This is the old name, please try another name" });
-    }
-
-    news.title = req.body.title;
-    await news.save();
 
     res.json({
-      message: "Updated Successfully",
-      updated_news: news,
-      old_name: oldName,
+      message: "Password updated successfully",
+      updatedUser: updatedNews,
     });
   } catch (error) {
     console.error(error);
