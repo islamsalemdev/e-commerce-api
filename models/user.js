@@ -33,30 +33,11 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    street: {
+    address: {
       type: String,
-      default: "",
+    
     },
-    apartment: {
-      type: String,
-      default: "",
-    },
-    zip: {
-      type: String,
-      default: "",
-    },
-    city: {
-      type: String,
-      default: "",
-    },
-    country: {
-      type: String,
-      default: "",
-    },
-    role: {
-      type: String,
-      default: "",
-    },
+  
   },
   {
     timestamps: true,

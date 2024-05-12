@@ -9,9 +9,11 @@ const wishlistRouter = require("./routers/wishlist");
 const newsRouter = require("./routers/news_router");
 const orderRouter = require("./routers/order");
 const searchRouter = require("./routers/search");
+const homepageRouter = require("./routers/home_page");
 const i18n = require("i18n");
 const path = require("path");
 const langRouter = require("./routers/lang");
+const offerRouter = require("./routers/offers");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -33,6 +35,8 @@ i18n.configure({
 app.use(i18n.init);
 
 // Routers
+app.use(homepageRouter);
+app.use(offerRouter);
 app.use(authRouter);
 app.use(searchRouter);
 app.use(langRouter);
