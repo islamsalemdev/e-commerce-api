@@ -12,6 +12,7 @@ authRouter.post("/api/v1/register", async (req, res) => {
     name,
     email,
     password,
+    phone,
     address,
     isAdmin,
     city,
@@ -40,6 +41,7 @@ authRouter.post("/api/v1/register", async (req, res) => {
       city: city,
       apartment: apartment,
       street: street,
+      phone: phone,
       zip: zip,
       country: country,
       role: role,
@@ -60,13 +62,13 @@ authRouter.post("/api/v1/login", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res
-        .status(400)
+        
         .json({ msg: "User with this email does not exist!" });
     }
 
     const isMatch = bcryptjs.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Incorrect password." });
+      return res.json({ msg: "Incorrect password." });
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");

@@ -8,6 +8,7 @@ const userAuth = async (req, res, next) => {
 
     const verified = jwt.verify(token, process.env.PASSWORD_KEY);
     const user = await User.findById(verified.id);
+ 
     if (!verified || user.isAdmin == true)
       return res
         .status(401)
