@@ -16,6 +16,10 @@ const homeSchema = mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "news_schema",
   },
+  offers : {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Offers",
+  }
 });
 
 const HomeSchema = mongoose.model("homeSchema", homeSchema);

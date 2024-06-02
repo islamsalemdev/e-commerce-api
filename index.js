@@ -8,6 +8,7 @@ const categoryRouter = require("./routers/category");
 const wishlistRouter = require("./routers/wishlist");
 const newsRouter = require("./routers/news_router");
 const orderRouter = require("./routers/order");
+const offersRouter = require("./routers/offers");
 const searchRouter = require("./routers/search");
 const homeRouter = require("./routers/home");
 const i18n = require("i18n");
@@ -35,6 +36,7 @@ app.use(i18n.init);
 
 // Routers
 app.use(authRouter);
+app.use(offersRouter);
 app.use(searchRouter);
 app.use(homeRouter);
 app.use(langRouter);
