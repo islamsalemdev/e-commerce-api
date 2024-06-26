@@ -12,17 +12,21 @@ authRouter.post("/api/v1/register", async (req, res) => {
     name,
     email,
     password,
+    phone,
     address,
     isAdmin,
-    phone
-  
+    city,
+    apartment,
+    street,
+    zip,
+    country,
+    role,
   } = req.body;
   const existUser = await User.findOne({ email });
 
   try {
     if (existUser) {
-      return res.status(200).json({
-        status: "fail",
+      return res.json({
         message: "this user is already registerd",
       });
     }
@@ -34,12 +38,18 @@ authRouter.post("/api/v1/register", async (req, res) => {
       password: hashedPassword,
       address: address,
       isAdmin: isAdmin,
-      phone: phone
+      city: city,
+      apartment: apartment,
+      street: street,
+      phone: phone,
+      zip: zip,
+      country: country,
+      role: role,
     });
 
     user = await user.save();
 
-    res.status(200).json({ status: "success", user_data: user });
+    res.json({ status: "Success", user_data: user });
   } catch (error) {
     handleValidationError(error, req, res);
   }
@@ -52,17 +62,17 @@ authRouter.post("/api/v1/login", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) {
       return res
-        .status(200)
-        .json({staus:"fail", msg: "User with this email does not exist!" });
+        
+        .json({ msg: "User with this email does not exist!" });
     }
 
     const isMatch = bcryptjs.compareSync(password, user.password);
     if (!isMatch) {
-      return res.status(200).json({staus:"fail", msg: "Incorrect password." });
+      return res.json({ msg: "Incorrect password." });
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.status(200).json({ status : "success",token, ...user._doc });
+    res.json({ token, ...user._doc });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

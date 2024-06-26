@@ -22,7 +22,7 @@ router.post(
         name: req.body.name,
         description: req.body.description,
         richDescription: req.body.richDescription,
-        image: "",
+        image: '',
         images: req.files.map((file) => file.path) ?? [],
         brand: req.body.brand,
         price: req.body.price,
@@ -130,12 +130,12 @@ router.get("/api/v1/product/new-arrival", async (req, res) => {
   }
 });
 
-router.patch("/api/v1/update-product/:id", admin, async (req, res) => {
+router.put("/api/v1/update-product/:id", admin, async (req, res) => {
   try {
     const productId = req.params.id;
 
     // Use findById to get a single product by ID
-    var product = await Product.findById(productId);
+    const product = await Product.findById(productId);
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -145,8 +145,6 @@ router.patch("/api/v1/update-product/:id", admin, async (req, res) => {
     product.description = req.body.description;
     product.price = req.body.price ?? product.price;
     product.isFeatured = req.body.isFeatured ?? product.isFeatured;
-    
-    
 
     await product.save();
     await product.populate({ path: "category" });

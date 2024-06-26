@@ -26,7 +26,7 @@ router.post('/api/v1/add-offer', admin, upload.single('banner'), async (req, res
         await offer.save();
 
         // Populate the product field in the offer model
-        
+    //    await offer.populate('product');
 
         return res.status(200).json({ status: 'success', added_offer: offer });
     } catch (error) {
@@ -47,7 +47,7 @@ router.get('/api/v1/get-offers' , async (req,res)=> {
 router.get('/api/v1/get-offer/:id', async (req, res )=> {
     const existedOffer = await OfferSchema.findById({_id : req.params.id});
     try {
-         if(!existedOffer) return res.status(400).res({message: 'This is offer is not available anymore !'});
+         if(!existedOffer) return res.res({message: 'This is offer is not available anymore !'});
         
          return res.status(200).json({status : 'success', offer : existedOffer});
     } catch (error) {
@@ -59,7 +59,7 @@ router.delete('/api/v1/delete-offer/:id', admin, async (req, res) => {
     try {
         const existOffer = await OfferSchema.findById(req.params.id);
         if (!existOffer) {
-            return res.status(404).json({ message: 'This offer is not available anymore!' });
+            return res.json({ message: 'This offer is not available anymore!' });
         }
         const deletedOffer = await OfferSchema.findByIdAndDelete(req.params.id);
         return res.status(200).json({ status: 'success', deleted_offer: deletedOffer });
