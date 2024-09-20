@@ -5,10 +5,10 @@ const admin = async (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
 
-    // Check if the Authorization header exists and if it starts with 'Bearer'
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "No auth token, access denied" });
-    }
+    // // Check if the Authorization header exists and if it starts with 'Bearer'
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return res.status(401).json({ message: "No auth token, access denied" });
+    // }
 
     // Extract the token from the 'Bearer <token>' format
     const token = authHeader.split(" ")[1];

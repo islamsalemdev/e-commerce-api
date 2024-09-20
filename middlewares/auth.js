@@ -6,9 +6,9 @@ const userAuth = async (req, res, next) => {
     const authHeader = req.header("Authorization");
 
     // Check if the Authorization header exists and starts with 'Bearer'
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ msg: "You are not authorized" });
-    }
+    // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    //   return res.status(401).json({ msg: "You are not authorized" });
+    // }
 
     // Extract the token from the 'Bearer <token>' format
     const token = authHeader.split(" ")[1];
